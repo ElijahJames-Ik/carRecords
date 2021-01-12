@@ -5,6 +5,7 @@ import 'package:carRecordApp/model/car_owners_data_model.dart';
 import 'package:carRecordApp/model/filter_data_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
+import 'package:flutter/cupertino.dart';
 
 class OperationsOwnersPage {
   static Future<PlatformFile> getCSVFile() async {
@@ -34,8 +35,6 @@ class OperationsOwnersPage {
       if (row[0] != 'id') {
         ownersList.add(data);
       }
-    }).onError((error) {
-      return null;
     });
     return ownersList;
   }
@@ -89,7 +88,7 @@ class OperationsOwnersPage {
       if (colors.length > 0 &&
           colors
                   .where((color) {
-                    if (color.toLowerCase() == color.toLowerCase()) {
+                    if (color.toLowerCase() == colorValue.toLowerCase()) {
                       return true;
                     } else {
                       return false;

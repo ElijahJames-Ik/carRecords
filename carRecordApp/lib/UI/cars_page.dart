@@ -17,7 +17,7 @@ class _CarspageState extends State<Carspage> {
   List<CarOwnerDataModel> dataOriginal = new List<CarOwnerDataModel>();
   bool isLoading = true;
 
-  void openAndLoadFile() {
+  Future<void> openAndLoadFile() async {
     setState(() {
       isLoading = true;
     });
@@ -38,7 +38,9 @@ class _CarspageState extends State<Carspage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    openAndLoadFile();
+    openAndLoadFile().then((_) {
+      setState(() {});
+    });
   }
 
   @override
@@ -61,8 +63,10 @@ class _CarspageState extends State<Carspage> {
           actions: [
             IconButton(
                 icon: Icon(Icons.file_upload, color: Colors.white),
-                onPressed: () {
-                  openAndLoadFile();
+                onPressed: () async {
+                  openAndLoadFile().then((_) {
+                    setState(() {});
+                  });
                 }),
             IconButton(
                 icon: Icon(

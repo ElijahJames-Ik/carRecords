@@ -1,5 +1,7 @@
 import 'package:carRecordApp/UI/filter_page_owners.dart';
 import 'package:carRecordApp/UI/landing_page.dart';
+import 'package:carRecordApp/UI/view_single_car_details.dart';
+import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:carRecordApp/UI/cars_page.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +12,12 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarBrightness: Brightness.dark));
-  runApp(OwnerApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => AppProvider())],
+      child: OwnerApp(),
+    ),
+  );
 }
 
 class OwnerApp extends StatelessWidget {
@@ -21,7 +28,8 @@ class OwnerApp extends StatelessWidget {
       title: 'Owners App',
       routes: {
         FilterPage.routeName: (ctx) => FilterPage(),
-        Carspage.routeName: (ctx) => Carspage()
+        Carspage.routeName: (ctx) => Carspage(),
+        ViewCarOwnerDetails.routeName: (ctx) => ViewCarOwnerDetails()
       },
       theme: ThemeData(
         // This is the theme of your application.

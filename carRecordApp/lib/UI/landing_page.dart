@@ -14,7 +14,7 @@ class _LandingPageState extends State<LandingPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Speedy',
+            'Landing Page',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.cyan[400],

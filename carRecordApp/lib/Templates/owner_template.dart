@@ -66,6 +66,13 @@ class OwnerTemplate extends StatelessWidget {
                   ),
                 ],
               ),
+              Image.asset(
+                data.gender.toLowerCase() == 'male'
+                    ? 'assets/images/male.png'
+                    : 'assets/images/female.png',
+                width: dimension.width * 0.35,
+                height: dimension.height * 0.15,
+              )
             ],
           ),
         ),

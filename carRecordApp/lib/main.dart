@@ -1,5 +1,7 @@
 import 'package:carRecordApp/UI/filter_page_owners.dart';
 import 'package:carRecordApp/UI/landing_page.dart';
+import 'package:carRecordApp/UI/user_details_page.dart';
+import 'package:carRecordApp/UI/users_page.dart';
 import 'package:carRecordApp/UI/view_single_car_details.dart';
 import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,9 @@ class OwnerApp extends StatelessWidget {
       routes: {
         FilterPage.routeName: (ctx) => FilterPage(),
         Carspage.routeName: (ctx) => Carspage(),
-        ViewCarOwnerDetails.routeName: (ctx) => ViewCarOwnerDetails()
+        ViewCarOwnerDetails.routeName: (ctx) => ViewCarOwnerDetails(),
+        ViewUserDetails.routeName: (ctx) => ViewUserDetails(),
+        UsersPage.routeName: (ctx) => UsersPage()
       },
       theme: ThemeData(
         // This is the theme of your application.

@@ -252,7 +252,7 @@ class _FilterPageState extends State<FilterPage> {
                             return InkWell(
                                 onTap: () {
                                   setState(() {
-                                    colorList.remove(countryList[index]);
+                                    colorList.remove(colorList[index]);
                                   });
                                 },
                                 child:

@@ -1,14 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:carRecordApp/Operations/shared_operations.dart';
 import 'package:carRecordApp/model/car_owners_data_model.dart';
 import 'package:carRecordApp/model/filter_data_model.dart';
+import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:csv/csv.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class OperationsOwnersPage {
-  static Future<PlatformFile> getCSVFile() async {
+  static Future<PlatformFile> getCSVFile(
+      GlobalKey<ScaffoldState> key, AppProvider provider) async {
     return await FilePicker.platform
         .pickFiles(
             allowMultiple: false,
@@ -16,27 +19,56 @@ class OperationsOwnersPage {
             type: FileType.custom)
         .then((response) {
       if (response != null) {
-        return response.files.first;
+        if (response.files.first.name == 'car_ownsers_data.csv') {
+          SharedOperations.saveFileLocation(response.files.first.path);
+          return response.files.first;
+        } else {
+          provider.isLoadingCarsPage = false;
+          SharedOperations.showMessage(
+              key, 'Invalid csv file, please open car_ownsers_data.csv');
+          return null;
+        }
       }
+      return null;
+    }).catchError((onError) {
+      provider.isLoadingCarsPage = false;
+      SharedOperations.showMessage(key, 'Couldn\'t open file');
+
       return null;
     });
   }
 
-  static List<CarOwnerDataModel> decodeCSVFile(PlatformFile file) {
+  static void decodeCSVFile(PlatformFile file, AppProvider provider,
+      GlobalKey<ScaffoldState> key) async {
     final input = new File(file.path).openRead();
     List<CarOwnerDataModel> ownersList = new List<CarOwnerDataModel>();
-
-    input
-        .transform(utf8.decoder)
-        .transform(new LineSplitter())
-        .listen((String line) {
-      List row = line.split(new RegExp(',(?=(?:[^\"]*\"[^\"]*\")*[^\"]*\$)'));
-      var data = CarOwnerDataModel.fromList(row);
-      if (row[0] != 'id') {
-        ownersList.add(data);
-      }
-    });
-    return ownersList;
+    try {
+      input.transform(utf8.decoder).transform(new LineSplitter()).listen(
+          (String line) {
+        List row = line.split(new RegExp(',(?=(?:[^\"]*\"[^\"]*\")*[^\"]*\$)'));
+        var data = CarOwnerDataModel.fromList(row);
+        if (row[0] != 'id') {
+          ownersList.add(data);
+        } else {
+          // if (row == null || row.length < 10 || row.length > 10) {
+          //   SharedOperations.showMessage(key, 'Couldn\'t parse csv file');
+          //   provider.isLoadingCarsPage = false;
+          // }
+        }
+      }, onDone: () {
+        provider.ownersDataList = ownersList;
+        provider.ownersDataListCopy = ownersList;
+        provider.isLoadingCarsPage = false;
+      }, onError: (error) {
+        SharedOperations.showMessage(key, 'Couldn\'t parse csv file');
+        provider.ownersDataList = null;
+        provider.ownersDataListCopy = null;
+        provider.isLoadingCarsPage = false;
+      });
+    } catch (ex) {
+      SharedOperations.showMessage(key, 'Couldn\'t parse csv file');
+      provider.isLoadingCarsPage = false;
+    }
   }
 
   static List<CarOwnerDataModel> filterOwnersList(

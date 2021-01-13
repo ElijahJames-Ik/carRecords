@@ -7,6 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class UserOperations {
+  /*
+  * This Function gets json data from the API and converts it
+  * to a list of UserDataModel objects.
+  * @return this function returns List of UserDataModel if the
+  * operation is successful else it returns null
+  */
   static Future<List<UserDataModel>> getUserDataFromAPI(
       GlobalKey<ScaffoldState> key) {
     return SharedOperations.checkConnectivity().then((result) {

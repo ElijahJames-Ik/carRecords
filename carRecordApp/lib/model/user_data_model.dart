@@ -16,6 +16,7 @@ class UserDataModel {
       this.colorList,
       this.countryList});
 
+  // create user Data model from json object
   factory UserDataModel.fromJson(Map<String, dynamic> json) {
     List<String> colors =
         (json['colors'] as List).map((e) => e as String).toList();

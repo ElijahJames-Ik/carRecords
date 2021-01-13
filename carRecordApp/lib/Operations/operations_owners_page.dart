@@ -10,6 +10,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OperationsOwnersPage {
+  /*
+  * File picker set to allow the user pick one csv file
+  * @return PlatformFile Object if a csv file is selected
+  * else return null if no file is selected or the file name
+  * isn't car_ownsers_data.csv or if an error occurs
+  */
   static Future<PlatformFile> getCSVFile(
       GlobalKey<ScaffoldState> key, AppProvider provider) async {
     return await FilePicker.platform
@@ -38,6 +44,15 @@ class OperationsOwnersPage {
     });
   }
 
+  /*
+  * Accepts a PlatformFile and AppProvider object as input
+  * parses the PlatformFile as a csv file and converts the 
+  * rows to CarOwnerDataModel Object, once the parsing operation
+  * is done the AppProvider object sets ownersDataList and ownersDataListCopy
+  * to the List of CarOwnerDataModel objects created from parsing the csv file.
+  * this allows for the data to be displayed in the cars page since ownersDataList
+  * is used as the data list for displayed the parsed data from the csv file.
+  */
   static void decodeCSVFile(PlatformFile file, AppProvider provider,
       GlobalKey<ScaffoldState> key) async {
     final input = new File(file.path).openRead();
@@ -71,6 +86,12 @@ class OperationsOwnersPage {
     }
   }
 
+  /*
+  * Accepts List of CarOwnerDataModel to filtered and filterModel
+  * that contains filter settings, this function creates a new list
+  * of CarOwnerDataModel based on the filterModel properties.
+  * @return this function the filtered List of CarOwnerDataModel
+  */
   static List<CarOwnerDataModel> filterOwnersList(
       List<CarOwnerDataModel> list, FilterModel filters) {
     print(filters.fromYear);
@@ -90,6 +111,12 @@ class OperationsOwnersPage {
     }).toList();
   }
 
+  /*
+  * function for check if country is in a list of country from filtering data
+  * to be used in the filterOwnersList function.
+  * @return this function returns true if the countryValue is present in the 
+  * countries list. else it returns false
+  */
   static bool checkCountries(List<String> countries, String countryValue) {
     if (countries == null || countries.length == 0) {
       return true;
@@ -113,6 +140,12 @@ class OperationsOwnersPage {
     }
   }
 
+/*
+  * function for check if color is in a list of colors from filtering data
+  * to be used in the filterOwnersList function.
+  * @return this function returns true if the colorValue is present in the 
+  * colors list. else it returns false
+  */
   static bool checkColor(List<String> colors, String colorValue) {
     if (colors == null || colors.length == 0) {
       return true;
@@ -136,6 +169,11 @@ class OperationsOwnersPage {
     }
   }
 
+/*
+* function checks if the gender selected in the filter is the same as the gender of
+* the carOwnerDataModel object being filtered.
+* @return this function returns true if they are the same else it returns false
+*/
   static bool checkGender(String genderFilter, String genderValue) {
     if (genderFilter == null || genderFilter.isEmpty || genderFilter == 'All') {
       return true;
@@ -149,6 +187,11 @@ class OperationsOwnersPage {
     }
   }
 
+  /*
+  * function checks if the carOwnerDataModel object date is equal to or greated than the start
+  * date from the filterModel object.
+  * @return this function returns true if the condition is met else returns null
+  */
   static bool checkDateFrom(String dateFilter, String dateValue) {
     if (dateFilter == null || dateFilter.isEmpty) {
       return true;
@@ -163,6 +206,11 @@ class OperationsOwnersPage {
     }
   }
 
+  /*
+  * function checks if the carOwnerDataModel object date is less than or equal to the end
+  * date from the filterModel object.
+  * @return this function returns true if the condition is met else returns null
+  */
   static bool checkDateTo(String dateFilter, String dateValue) {
     if (dateFilter == null || dateFilter.isEmpty) {
       return true;

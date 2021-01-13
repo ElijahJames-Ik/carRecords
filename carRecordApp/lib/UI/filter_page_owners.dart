@@ -1,6 +1,8 @@
+import 'package:carRecordApp/Operations/shared_operations.dart';
 import 'package:carRecordApp/Templates/string_content_template.dart';
 import 'package:carRecordApp/model/filter_data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FilterPage extends StatefulWidget {
   static String routeName = '/filter';
@@ -9,6 +11,7 @@ class FilterPage extends StatefulWidget {
 }
 
 class _FilterPageState extends State<FilterPage> {
+  GlobalKey<ScaffoldState> _scaffoldKey3 = new GlobalKey<ScaffoldState>();
   TextEditingController fromDate = new TextEditingController();
   TextEditingController toDate = new TextEditingController();
   TextEditingController country = new TextEditingController();
@@ -48,6 +51,7 @@ class _FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     var dimension = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey3,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -61,41 +65,93 @@ class _FilterPageState extends State<FilterPage> {
         ),
         backgroundColor: Colors.cyan[400],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(
-              left: dimension.width * 0.05,
-              top: dimension.height * 0.05,
-              right: dimension.width * 0.05),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                'Date Range',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                    color: Colors.cyan),
-              ),
-              SizedBox(
-                height: dimension.height * 0.01,
-              ),
-              Text(
-                'From: ',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 15,
-                    color: Colors.cyan),
-              ),
-              InkWell(
-                onTap: () {
-                  selectDate(context, fromDate);
-                },
-                child: AbsorbPointer(
-                  absorbing: true,
-                  child: TextField(
-                    controller: fromDate,
+      body: Builder(
+        builder: (context) => SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.only(
+                left: dimension.width * 0.05,
+                top: dimension.height * 0.05,
+                right: dimension.width * 0.05),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Date Range',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Colors.cyan),
+                ),
+                SizedBox(
+                  height: dimension.height * 0.01,
+                ),
+                Text(
+                  'From: ',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                      color: Colors.cyan),
+                ),
+                InkWell(
+                  onTap: () {
+                    selectDate(context, fromDate);
+                  },
+                  child: AbsorbPointer(
+                    absorbing: true,
+                    child: TextField(
+                      controller: fromDate,
+                      decoration: InputDecoration(
+                        border: new UnderlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.cyan),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.cyan),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: dimension.height * 0.01,
+                ),
+                Text(
+                  'To: ',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                      color: Colors.cyan),
+                ),
+                InkWell(
+                  onTap: () {
+                    selectDate(context, toDate);
+                  },
+                  child: AbsorbPointer(
+                    absorbing: true,
+                    child: TextField(
+                      controller: toDate,
+                      decoration: InputDecoration(
+                        border: new UnderlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.cyan),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.cyan),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: dimension.height * 0.04,
+                ),
+                Text(
+                  'Gender',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Colors.cyan),
+                ),
+                DropdownButtonFormField(
                     decoration: InputDecoration(
                       border: new UnderlineInputBorder(
                         borderSide: new BorderSide(color: Colors.cyan),
@@ -104,50 +160,33 @@ class _FilterPageState extends State<FilterPage> {
                         borderSide: BorderSide(color: Colors.cyan),
                       ),
                     ),
-                  ),
+                    hint: Text('Select gender'),
+                    items: genderList,
+                    onChanged: (value) {
+                      setState(() {
+                        gender = value;
+                      });
+                    }),
+                SizedBox(
+                  height: dimension.height * 0.04,
                 ),
-              ),
-              SizedBox(
-                height: dimension.height * 0.01,
-              ),
-              Text(
-                'To: ',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 15,
-                    color: Colors.cyan),
-              ),
-              InkWell(
-                onTap: () {
-                  selectDate(context, toDate);
-                },
-                child: AbsorbPointer(
-                  absorbing: true,
-                  child: TextField(
-                    controller: toDate,
-                    decoration: InputDecoration(
-                      border: new UnderlineInputBorder(
-                        borderSide: new BorderSide(color: Colors.cyan),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.cyan),
-                      ),
-                    ),
-                  ),
+                Text(
+                  'Countries',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Colors.cyan),
                 ),
-              ),
-              SizedBox(
-                height: dimension.height * 0.04,
-              ),
-              Text(
-                'Gender',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                    color: Colors.cyan),
-              ),
-              DropdownButtonFormField(
+                TextField(
+                  onSubmitted: (value) {
+                    setState(() {
+                      countryList.add(value);
+                      country.clear();
+                    });
+                  },
+                  controller: country,
                   decoration: InputDecoration(
+                    hintText: 'Enter Country',
                     border: new UnderlineInputBorder(
                       borderSide: new BorderSide(color: Colors.cyan),
                     ),
@@ -155,133 +194,110 @@ class _FilterPageState extends State<FilterPage> {
                       borderSide: BorderSide(color: Colors.cyan),
                     ),
                   ),
-                  hint: Text('Select gender'),
-                  items: genderList,
-                  onChanged: (value) {
+                ),
+                SizedBox(
+                  height: dimension.height * 0.02,
+                ),
+                countryList.length > 0
+                    ? Container(
+                        height: dimension.height * 0.04,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: countryList.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      countryList.remove(countryList[index]);
+                                    });
+                                  },
+                                  child: StringContent(
+                                      content: countryList[index]));
+                            }),
+                      )
+                    : SizedBox(),
+                SizedBox(
+                  height: dimension.height * 0.04,
+                ),
+                Text(
+                  'Color',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Colors.cyan),
+                ),
+                TextField(
+                  onSubmitted: (value) {
                     setState(() {
-                      gender = value;
+                      colorList.add(value);
+                      color.clear();
                     });
-                  }),
-              SizedBox(
-                height: dimension.height * 0.04,
-              ),
-              Text(
-                'Countries',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                    color: Colors.cyan),
-              ),
-              TextField(
-                onSubmitted: (value) {
-                  setState(() {
-                    countryList.add(value);
-                    country.clear();
-                  });
-                },
-                controller: country,
-                decoration: InputDecoration(
-                  hintText: 'Enter Country',
-                  border: new UnderlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.cyan),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.cyan),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: dimension.height * 0.02,
-              ),
-              countryList.length > 0
-                  ? Container(
-                      height: dimension.height * 0.04,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: countryList.length,
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    countryList.remove(countryList[index]);
-                                  });
-                                },
-                                child:
-                                    StringContent(content: countryList[index]));
-                          }),
-                    )
-                  : SizedBox(),
-              SizedBox(
-                height: dimension.height * 0.04,
-              ),
-              Text(
-                'Color',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                    color: Colors.cyan),
-              ),
-              TextField(
-                onSubmitted: (value) {
-                  setState(() {
-                    colorList.add(value);
-                    color.clear();
-                  });
-                },
-                controller: color,
-                decoration: InputDecoration(
-                  hintText: 'Enter Color',
-                  border: new UnderlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.cyan),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.cyan),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: dimension.height * 0.02,
-              ),
-              colorList.length > 0
-                  ? Container(
-                      height: dimension.height * 0.04,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: colorList.length,
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    colorList.remove(colorList[index]);
-                                  });
-                                },
-                                child:
-                                    StringContent(content: colorList[index]));
-                          }),
-                    )
-                  : SizedBox(),
-              SizedBox(
-                height: dimension.height * 0.02,
-              ),
-              FlatButton(
-                  color: Colors.cyan[400],
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(dimension.width * 0.04)),
-                  onPressed: () {
-                    FilterModel filterData = new FilterModel(
-                        colors: colorList,
-                        countries: countryList,
-                        fromYear: fromDate.text.isEmpty ? null : fromDate.text,
-                        gender: gender,
-                        toYear: toDate.text.isEmpty ? null : toDate.text);
-                    Navigator.pop(context, filterData);
                   },
-                  child: Text(
-                    'Apply Filter',
-                    style: TextStyle(color: Colors.white),
-                  ))
-            ],
+                  controller: color,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Color',
+                    border: new UnderlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.cyan),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.cyan),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: dimension.height * 0.02,
+                ),
+                colorList.length > 0
+                    ? Container(
+                        height: dimension.height * 0.04,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: colorList.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      colorList.remove(colorList[index]);
+                                    });
+                                  },
+                                  child:
+                                      StringContent(content: colorList[index]));
+                            }),
+                      )
+                    : SizedBox(),
+                SizedBox(
+                  height: dimension.height * 0.02,
+                ),
+                FlatButton(
+                    color: Colors.cyan[400],
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(dimension.width * 0.04)),
+                    onPressed: () {
+                      if (fromDate.text.isNotEmpty && toDate.text.isNotEmpty) {
+                        int from = int.parse(fromDate.text);
+                        int to = int.parse(toDate.text);
+                        if (from > to) {
+                          SharedOperations.showMessage(_scaffoldKey3,
+                              'start date must be less than end data');
+                          return;
+                        }
+                      }
+                      FilterModel filterData = new FilterModel(
+                          colors: colorList,
+                          countries: countryList,
+                          fromYear:
+                              fromDate.text.isEmpty ? null : fromDate.text,
+                          gender: gender,
+                          toYear: toDate.text.isEmpty ? null : toDate.text);
+                      Navigator.pop(context, filterData);
+                    },
+                    child: Text(
+                      'Apply Filter',
+                      style: TextStyle(color: Colors.white),
+                    ))
+              ],
+            ),
           ),
         ),
       ),

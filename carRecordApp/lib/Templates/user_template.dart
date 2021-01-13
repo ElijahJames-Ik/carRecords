@@ -28,14 +28,14 @@ class UserTemplate extends StatelessWidget {
               Navigator.pushNamed(context, ViewUserDetails.routeName);
             },
             leading: ClipRRect(
-              borderRadius: BorderRadius.circular(dimension.width * 0.075),
+              borderRadius: BorderRadius.circular(dimension.width * 0.07),
               child: FadeInImage.assetNetwork(
                 fadeInDuration: const Duration(milliseconds: 300),
                 placeholder: 'assets/images/img_placeholder.png',
                 fit: BoxFit.cover,
                 image: data.avatar,
-                width: dimension.width * 0.15,
-                height: dimension.width * 0.15,
+                width: dimension.width * 0.14,
+                height: dimension.width * 0.14,
               ),
             ),
             title: Text(

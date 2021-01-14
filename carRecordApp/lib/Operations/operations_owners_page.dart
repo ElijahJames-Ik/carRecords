@@ -177,7 +177,8 @@ class OperationsOwnersPage {
       if (countries.length > 0 &&
           countries
                   .where((country) {
-                    if (country.toLowerCase() == countryValue.toLowerCase()) {
+                    if (country.toLowerCase().trim() ==
+                        countryValue.toLowerCase().trim()) {
                       return true;
                     } else {
                       return false;
@@ -206,7 +207,8 @@ class OperationsOwnersPage {
       if (colors.length > 0 &&
           colors
                   .where((color) {
-                    if (color.toLowerCase() == colorValue.toLowerCase()) {
+                    if (color.toLowerCase().trim() ==
+                        colorValue.toLowerCase().trim()) {
                       return true;
                     } else {
                       return false;

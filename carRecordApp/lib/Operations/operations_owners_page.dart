@@ -112,14 +112,11 @@ class OperationsOwnersPage {
   */
   static List<CarOwnerDataModel> filterOwnersList(
       List<CarOwnerDataModel> list, FilterCarModel filters) {
-    print(filters.fromYear);
-    print(filters.toYear);
     return list.where((element) {
-      // print(element.carModelYear);
-      // print(element.carModel);
       if (checkCountries(filters.countries, element.country) &&
           checkColor(filters.colors, element.carColor) &&
-          checkCarModel(filters.model, element.carModel) &&
+          checkCarModel(filters.model.toLowerCase().trim(),
+              element.carModel.toUpperCase().trim()) &&
           SharedOperations.checkGender(filters.gender, element.gender) &&
           checkDateFrom(filters.fromYear, element.carModelYear) &&
           checkDateTo(filters.toYear, element.carModelYear)) {

@@ -61,8 +61,6 @@ class UserOperations {
   static List<UserDataModel> filterUsersList(
       List<UserDataModel> list, FilterUserModel filters) {
     return list.where((element) {
-      // print(element.carModelYear);
-      // print(element.carModel);
       if (checkCountries(filters.countries, element.countryList) &&
           checkColor(filters.colors, element.colorList) &&
           SharedOperations.checkGender(filters.gender, element.gender)) {

@@ -1,7 +1,7 @@
-class FilterModelUser {
+class FilterUserModel {
   String gender;
   List<String> countries;
   List<String> colors;
 
-  FilterModelUser({this.gender, this.countries, this.colors});
+  FilterUserModel({this.gender, this.countries, this.colors});
 }

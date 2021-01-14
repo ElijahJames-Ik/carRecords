@@ -54,19 +54,21 @@ class UsersPage extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.filter_list_alt, color: Colors.white),
               onPressed: () {
-                if (provider.userDataListCopy != null &&
-                    provider.userDataListCopy.length > 0) {
-                  Navigator.pushNamed(context, FilterPageUsers.routeName)
-                      .then((response) {
-                    if (response != null) {
-                      var filters = response as FilterModelUser;
-                      provider.userDataList = UserOperations.filterUsersList(
-                          provider.userDataListCopy, filters);
-                    }
-                  });
-                } else {
-                  SharedOperations.showMessage(
-                      _scaffoldKey, 'Can filter empty list');
+                if (!provider.isLoadingUserPage) {
+                  if (provider.userDataListCopy != null &&
+                      provider.userDataListCopy.length > 0) {
+                    Navigator.pushNamed(context, FilterPageUsers.routeName)
+                        .then((response) {
+                      if (response != null) {
+                        var filters = response as FilterUserModel;
+                        provider.userDataList = UserOperations.filterUsersList(
+                            provider.userDataListCopy, filters);
+                      }
+                    });
+                  } else {
+                    SharedOperations.showMessage(
+                        _scaffoldKey, 'Can filter empty list');
+                  }
                 }
               })
         ],

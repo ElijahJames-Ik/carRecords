@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:carRecordApp/Operations/shared_operations.dart';
 import 'package:carRecordApp/model/car_owners_data_model.dart';
-import 'package:carRecordApp/model/filter_data_model.dart';
+import 'package:carRecordApp/model/filter_data_car_model.dart';
 import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
@@ -111,7 +111,7 @@ class OperationsOwnersPage {
   * @return this function the filtered List of CarOwnerDataModel
   */
   static List<CarOwnerDataModel> filterOwnersList(
-      List<CarOwnerDataModel> list, FilterModel filters) {
+      List<CarOwnerDataModel> list, FilterCarModel filters) {
     print(filters.fromYear);
     print(filters.toYear);
     return list.where((element) {
@@ -119,6 +119,7 @@ class OperationsOwnersPage {
       // print(element.carModel);
       if (checkCountries(filters.countries, element.country) &&
           checkColor(filters.colors, element.carColor) &&
+          checkCarModel(filters.model, element.carModel) &&
           SharedOperations.checkGender(filters.gender, element.gender) &&
           checkDateFrom(filters.fromYear, element.carModelYear) &&
           checkDateTo(filters.toYear, element.carModelYear)) {
@@ -218,6 +219,19 @@ class OperationsOwnersPage {
                   .toList()
                   .length >
               0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  static bool checkCarModel(String modelFilter, String modelValue) {
+    if (modelFilter == null || modelFilter.isEmpty) {
+      return true;
+    } else {
+      if (modelFilter != null &&
+          modelFilter.toLowerCase() == modelValue.toLowerCase()) {
         return true;
       } else {
         return false;

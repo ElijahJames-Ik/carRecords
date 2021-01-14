@@ -1,6 +1,9 @@
+import 'package:carRecordApp/Operations/shared_operations.dart';
 import 'package:carRecordApp/Templates/string_content_template.dart';
 import 'package:carRecordApp/model/filter_data_user_model.dart';
+import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FilterPageUsers extends StatefulWidget {
   static String routeName = '/filterUsers';
@@ -9,6 +12,7 @@ class FilterPageUsers extends StatefulWidget {
 }
 
 class _FilterPageUsersState extends State<FilterPageUsers> {
+  bool isStarting = true;
   GlobalKey<ScaffoldState> _scaffoldKey3 = new GlobalKey<ScaffoldState>();
   TextEditingController country = new TextEditingController();
   TextEditingController color = new TextEditingController();
@@ -45,7 +49,18 @@ class _FilterPageUsersState extends State<FilterPageUsers> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AppProvider>(context);
     var dimension = MediaQuery.of(context).size;
+    if (isStarting) {
+      if (provider.filterUserModel != null) {
+        gender = provider.filterUserModel.gender;
+        colorList = provider.filterUserModel.colors;
+        countryList = provider.filterUserModel.countries;
+        setState(() {});
+        isStarting = false;
+      }
+    }
+
     return Scaffold(
       key: _scaffoldKey3,
       appBar: AppBar(
@@ -93,6 +108,7 @@ class _FilterPageUsersState extends State<FilterPageUsers> {
                     ),
                     hint: Text('Select gender'),
                     items: genderList,
+                    value: gender,
                     onChanged: (value) {
                       setState(() {
                         gender = value;
@@ -127,11 +143,11 @@ class _FilterPageUsersState extends State<FilterPageUsers> {
                   ),
                 ),
                 SizedBox(
-                  height: dimension.height * 0.02,
+                  height: dimension.height * 0.025,
                 ),
                 countryList.length > 0
                     ? Container(
-                        height: dimension.height * 0.04,
+                        height: dimension.height * 0.05,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: countryList.length,
@@ -176,11 +192,11 @@ class _FilterPageUsersState extends State<FilterPageUsers> {
                   ),
                 ),
                 SizedBox(
-                  height: dimension.height * 0.02,
+                  height: dimension.height * 0.025,
                 ),
                 colorList.length > 0
                     ? Container(
-                        height: dimension.height * 0.04,
+                        height: dimension.height * 0.05,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: colorList.length,
@@ -199,23 +215,57 @@ class _FilterPageUsersState extends State<FilterPageUsers> {
                 SizedBox(
                   height: dimension.height * 0.02,
                 ),
-                FlatButton(
-                    color: Colors.cyan[400],
-                    shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(dimension.width * 0.04)),
-                    onPressed: () {
-                      FilterModelUser filterData = new FilterModelUser(
-                        colors: colorList,
-                        countries: countryList,
-                        gender: gender,
-                      );
-                      Navigator.pop(context, filterData);
-                    },
-                    child: Text(
-                      'Apply Filter',
-                      style: TextStyle(color: Colors.white),
-                    ))
+                Row(
+                  children: [
+                    FlatButton(
+                      color: Colors.cyan[400],
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(dimension.width * 0.04)),
+                      onPressed: () {
+                        if (gender == null &&
+                            colorList.length == 0 &&
+                            countryList.length == 0) {
+                          SharedOperations.showMessage(
+                              _scaffoldKey3, 'You must set atleast one filter');
+                          return;
+                        }
+                        FilterUserModel filterData = new FilterUserModel(
+                          colors: colorList,
+                          countries: countryList,
+                          gender: gender,
+                        );
+                        provider.filterUserModel = filterData;
+                        Navigator.pop(context, filterData);
+                      },
+                      child: Text(
+                        'Apply Filter',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(
+                      width: dimension.width * 0.02,
+                    ),
+                    FlatButton(
+                      color: Colors.cyan[400],
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(dimension.width * 0.04)),
+                      onPressed: () {
+                        provider.userDataList = provider.userDataListCopy;
+                        provider.filterUserModel = null;
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Remove Filter',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: dimension.height * 0.04,
+                )
               ],
             ),
           ),

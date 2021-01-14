@@ -60,7 +60,7 @@ class UserOperations {
   }
 
   static List<UserDataModel> filterUsersList(
-      List<UserDataModel> list, FilterModelUser filters) {
+      List<UserDataModel> list, FilterUserModel filters) {
     return list.where((element) {
       // print(element.carModelYear);
       // print(element.carModel);
@@ -78,10 +78,13 @@ class UserOperations {
     if (countries == null || countries.length == 0) {
       return true;
     } else {
+      if (countryList == null || countryList.length == 0) {
+        return false;
+      }
       if (countries.length > 0) {
-        countryList = countryList.map((e) => e.toLowerCase()).toList();
+        countryList = countryList.map((e) => e.toLowerCase().trim()).toList();
         for (String country in countries) {
-          if (!countryList.contains(country.toLowerCase())) {
+          if (!countryList.contains(country.toLowerCase().trim())) {
             return false;
           }
         }
@@ -96,10 +99,13 @@ class UserOperations {
     if (colors == null || colors.length == 0) {
       return true;
     } else {
-      colorList = colorList.map((e) => e.toLowerCase()).toList();
-      if (colors.length > 0) {
+      if (colorList == null || colorList.length == 0) {
+        return false;
+      }
+      colorList = colorList.map((e) => e.toLowerCase().trim()).toList();
+      if (colorList.length > 0) {
         for (String color in colors) {
-          if (!colors.contains(color.toLowerCase())) {
+          if (!colorList.contains(color.toLowerCase().trim())) {
             return false;
           }
         }

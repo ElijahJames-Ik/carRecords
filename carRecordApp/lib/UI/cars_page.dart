@@ -2,7 +2,7 @@ import 'package:carRecordApp/Operations/operations_owners_page.dart';
 import 'package:carRecordApp/Operations/shared_operations.dart';
 import 'package:carRecordApp/Templates/owner_template.dart';
 import 'package:carRecordApp/UI/filter_page_owners.dart';
-import 'package:carRecordApp/model/filter_data_model.dart';
+import 'package:carRecordApp/model/filter_data_car_model.dart';
 import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +72,9 @@ class Carspage extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context);
+            if (!provider.isLoadingCarsPage) {
+              Navigator.pop(context);
+            }
           },
         ),
         title: Text(
@@ -84,8 +86,10 @@ class Carspage extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.file_upload, color: Colors.white),
               onPressed: () async {
-                isOpenPickedRequested = true;
-                openAndLoadFile(provider);
+                if (!provider.isLoadingCarsPage) {
+                  isOpenPickedRequested = true;
+                  openAndLoadFile(provider);
+                }
               }),
           IconButton(
               icon: Icon(
@@ -101,11 +105,15 @@ class Carspage extends StatelessWidget {
                 Navigator.pushNamed(context, FilterPage.routeName)
                     .then((response) {
                   if (response != null) {
-                    FilterModel filters = response as FilterModel;
+                    FilterCarModel filters = response as FilterCarModel;
 
-                    provider.ownersDataList =
-                        OperationsOwnersPage.filterOwnersList(
-                            provider.ownersDataListCopy, filters);
+                    var filteredList = OperationsOwnersPage.filterOwnersList(
+                        provider.ownersDataListCopy, filters);
+                    if (filteredList == null || filteredList.length == 0) {
+                      SharedOperations.showMessage(
+                          _scaffoldKey2, 'filtered list has no data');
+                    }
+                    provider.ownersDataList = filteredList;
                   }
                 });
               })

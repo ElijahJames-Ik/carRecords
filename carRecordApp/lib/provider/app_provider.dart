@@ -1,4 +1,6 @@
 import 'package:carRecordApp/model/car_owners_data_model.dart';
+import 'package:carRecordApp/model/filter_data_car_model.dart';
+import 'package:carRecordApp/model/filter_data_user_model.dart';
 import 'package:carRecordApp/model/user_data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,12 +11,16 @@ class AppProvider with ChangeNotifier {
   List<CarOwnerDataModel> _ownersDataListCopy;
   List<UserDataModel> _userDataList;
   List<UserDataModel> _userDataListCopy;
+  FilterUserModel _filterUserModel;
+  FilterCarModel _filterCarModel;
 
   UserDataModel _userData;
   bool _isLoadingCarsPage = true;
   bool _isLoadingUserPage = true;
 
   CarOwnerDataModel get ownerData => _ownerData;
+  FilterUserModel get filterUserModel => _filterUserModel;
+  FilterCarModel get filterCarModel => _filterCarModel;
   List<CarOwnerDataModel> get ownersDataList => _ownersDataList;
   List<CarOwnerDataModel> get ownersDataListCopy => _ownersDataListCopy;
   List<UserDataModel> get userDataList => _userDataList;
@@ -22,6 +28,16 @@ class AppProvider with ChangeNotifier {
   bool get isLoadingCarsPage => _isLoadingCarsPage;
   bool get isLoadingUserPage => _isLoadingUserPage;
   UserDataModel get userData => _userData;
+
+  set filterCarModel(FilterCarModel filter) {
+    _filterCarModel = filter;
+    notifyListeners();
+  }
+
+  set filterUserModel(FilterUserModel filter) {
+    _filterUserModel = filter;
+    notifyListeners();
+  }
 
   set userData(UserDataModel data) {
     _userData = data;

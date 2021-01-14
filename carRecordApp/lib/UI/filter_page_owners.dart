@@ -1,8 +1,9 @@
 import 'package:carRecordApp/Operations/shared_operations.dart';
 import 'package:carRecordApp/Templates/string_content_template.dart';
-import 'package:carRecordApp/model/filter_data_model.dart';
+import 'package:carRecordApp/model/filter_data_car_model.dart';
+import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class FilterPage extends StatefulWidget {
   static String routeName = '/filter';
@@ -11,11 +12,13 @@ class FilterPage extends StatefulWidget {
 }
 
 class _FilterPageState extends State<FilterPage> {
+  bool isStarting = true;
   GlobalKey<ScaffoldState> _scaffoldKey3 = new GlobalKey<ScaffoldState>();
   TextEditingController fromDate = new TextEditingController();
   TextEditingController toDate = new TextEditingController();
   TextEditingController country = new TextEditingController();
   TextEditingController color = new TextEditingController();
+  TextEditingController carModel = new TextEditingController();
   List<String> countryList = new List<String>();
   List<String> colorList = new List<String>();
   List<DropdownMenuItem> genderList = [
@@ -49,7 +52,17 @@ class _FilterPageState extends State<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AppProvider>(context);
     var dimension = MediaQuery.of(context).size;
+    if (isStarting && provider.filterCarModel != null) {
+      fromDate.text = provider.filterCarModel.fromYear;
+      toDate.text = provider.filterCarModel.toYear;
+      gender = provider.filterCarModel.gender;
+      countryList = provider.filterCarModel.countries;
+      colorList = provider.filterCarModel.colors;
+      setState(() {});
+      isStarting = false;
+    }
     return Scaffold(
       key: _scaffoldKey3,
       appBar: AppBar(
@@ -161,12 +174,35 @@ class _FilterPageState extends State<FilterPage> {
                       ),
                     ),
                     hint: Text('Select gender'),
+                    value: gender,
                     items: genderList,
                     onChanged: (value) {
                       setState(() {
                         gender = value;
                       });
                     }),
+                SizedBox(
+                  height: dimension.height * 0.04,
+                ),
+                Text(
+                  'Car Model',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Colors.cyan),
+                ),
+                TextField(
+                  controller: carModel,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Car Model',
+                    border: new UnderlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.cyan),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.cyan),
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: dimension.height * 0.04,
                 ),
@@ -245,7 +281,7 @@ class _FilterPageState extends State<FilterPage> {
                   ),
                 ),
                 SizedBox(
-                  height: dimension.height * 0.02,
+                  height: dimension.height * 0.025,
                 ),
                 colorList.length > 0
                     ? Container(
@@ -266,36 +302,74 @@ class _FilterPageState extends State<FilterPage> {
                       )
                     : SizedBox(),
                 SizedBox(
-                  height: dimension.height * 0.02,
+                  height: dimension.height * 0.025,
                 ),
-                FlatButton(
-                    color: Colors.cyan[400],
-                    shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(dimension.width * 0.04)),
-                    onPressed: () {
-                      if (fromDate.text.isNotEmpty && toDate.text.isNotEmpty) {
-                        int from = int.parse(fromDate.text);
-                        int to = int.parse(toDate.text);
-                        if (from > to) {
-                          SharedOperations.showMessage(_scaffoldKey3,
-                              'start date must be less than end data');
+                Row(
+                  children: [
+                    FlatButton(
+                      color: Colors.cyan[400],
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(dimension.width * 0.04)),
+                      onPressed: () {
+                        if (fromDate.text.isEmpty &&
+                            toDate.text.isEmpty &&
+                            carModel.text.isEmpty &&
+                            gender == null &&
+                            colorList.length == 0 &&
+                            countryList.length == 0) {
+                          SharedOperations.showMessage(
+                              _scaffoldKey3, 'You must set atleast one filter');
                           return;
                         }
-                      }
-                      FilterModel filterData = new FilterModel(
-                          colors: colorList,
-                          countries: countryList,
-                          fromYear:
-                              fromDate.text.isEmpty ? null : fromDate.text,
-                          gender: gender,
-                          toYear: toDate.text.isEmpty ? null : toDate.text);
-                      Navigator.pop(context, filterData);
-                    },
-                    child: Text(
-                      'Apply Filter',
-                      style: TextStyle(color: Colors.white),
-                    ))
+                        if (fromDate.text.isNotEmpty &&
+                            toDate.text.isNotEmpty) {
+                          int from = int.parse(fromDate.text);
+                          int to = int.parse(toDate.text);
+                          if (from > to) {
+                            SharedOperations.showMessage(_scaffoldKey3,
+                                'start date must be less than end data');
+                            return;
+                          }
+                        }
+                        FilterCarModel filterData = new FilterCarModel(
+                            colors: colorList,
+                            countries: countryList,
+                            model: carModel.text.isEmpty ? null : carModel.text,
+                            fromYear:
+                                fromDate.text.isEmpty ? null : fromDate.text,
+                            gender: gender,
+                            toYear: toDate.text.isEmpty ? null : toDate.text);
+                        provider.filterCarModel = filterData;
+                        Navigator.pop(context, filterData);
+                      },
+                      child: Text(
+                        'Apply Filter',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(
+                      width: dimension.width * 0.02,
+                    ),
+                    FlatButton(
+                        color: Colors.cyan[400],
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(dimension.width * 0.04)),
+                        onPressed: () {
+                          provider.ownersDataList = provider.ownersDataListCopy;
+                          provider.filterCarModel = null;
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'Remove Filter',
+                          style: TextStyle(color: Colors.white),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                  height: dimension.height * 0.04,
+                )
               ],
             ),
           ),

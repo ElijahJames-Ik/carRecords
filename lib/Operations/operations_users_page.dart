@@ -5,6 +5,7 @@ import 'package:carRecordApp/model/filter_data_user_model.dart';
 import 'package:carRecordApp/model/user_data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class UserOperations {
@@ -35,11 +36,13 @@ class UserOperations {
             if (statusCode == 200) {
               try {
                 var body = json.decode(response.body) as List;
+
                 return body
                     .map((json) =>
                         UserDataModel.fromJson(json as Map<String, dynamic>))
                     .toList();
               } catch (error) {
+                print(error.toString());
                 SharedOperations.showMessage(
                     key, 'An error occured parse json resource');
                 return null;

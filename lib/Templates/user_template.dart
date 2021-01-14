@@ -25,19 +25,27 @@ class UserTemplate extends StatelessWidget {
               provider.userData = data;
               Navigator.pushNamed(context, ViewUserDetails.routeName);
             },
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(dimension.width * 0.07),
-              child: FadeInImage.assetNetwork(
-                fadeInDuration: const Duration(milliseconds: 300),
-                placeholder: 'assets/images/img_placeholder.png',
-                fit: BoxFit.cover,
-                image: data.avatar,
-                width: dimension.width * 0.14,
-                height: dimension.width * 0.14,
-              ),
-            ),
+            leading: data.avatar != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(dimension.width * 0.07),
+                    child: FadeInImage.assetNetwork(
+                      fadeInDuration: const Duration(milliseconds: 300),
+                      placeholder: 'assets/images/img_placeholder.png',
+                      fit: BoxFit.cover,
+                      image: data.avatar,
+                      width: dimension.width * 0.14,
+                      height: dimension.width * 0.14,
+                    ),
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(dimension.width * 0.07),
+                    child: Image.asset('assets/images/img_placeholder.png',
+                        fit: BoxFit.cover,
+                        width: dimension.width * 0.14,
+                        height: dimension.width * 0.14),
+                  ),
             title: Text(
-              '${data.fullName}',
+              data.fullName != null ? '${data.fullName}' : '',
               overflow: TextOverflow.fade,
               maxLines: 2,
               style: TextStyle(

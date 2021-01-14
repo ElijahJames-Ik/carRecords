@@ -58,6 +58,7 @@ class _FilterPageState extends State<FilterPage> {
       fromDate.text = provider.filterCarModel.fromYear;
       toDate.text = provider.filterCarModel.toYear;
       gender = provider.filterCarModel.gender;
+      carModel.text = provider.filterCarModel.model;
       countryList = provider.filterCarModel.countries;
       colorList = provider.filterCarModel.colors;
       setState(() {});

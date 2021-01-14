@@ -44,7 +44,10 @@ class UsersPage extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              if (!provider.isLoadingUserPage) {
+                provider.filterUserModel = null;
+                Navigator.pop(context);
+              }
             }),
         title: Text(
           'Users',
@@ -61,8 +64,14 @@ class UsersPage extends StatelessWidget {
                         .then((response) {
                       if (response != null) {
                         var filters = response as FilterUserModel;
-                        provider.userDataList = UserOperations.filterUsersList(
+                        var filteredList = UserOperations.filterUsersList(
                             provider.userDataListCopy, filters);
+
+                        if (filteredList == null || filteredList.length == 0) {
+                          SharedOperations.showMessage(
+                              _scaffoldKey, 'filtered list has no data');
+                        }
+                        provider.userDataList = filteredList;
                       }
                     });
                   } else {

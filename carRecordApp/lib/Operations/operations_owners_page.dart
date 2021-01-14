@@ -115,8 +115,7 @@ class OperationsOwnersPage {
     return list.where((element) {
       if (checkCountries(filters.countries, element.country) &&
           checkColor(filters.colors, element.carColor) &&
-          checkCarModel(filters.model.toLowerCase().trim(),
-              element.carModel.toUpperCase().trim()) &&
+          checkCarModel(filters.model, element.carModel) &&
           SharedOperations.checkGender(filters.gender, element.gender) &&
           checkDateFrom(filters.fromYear, element.carModelYear) &&
           checkDateTo(filters.toYear, element.carModelYear)) {
@@ -228,7 +227,7 @@ class OperationsOwnersPage {
       return true;
     } else {
       if (modelFilter != null &&
-          modelFilter.toLowerCase() == modelValue.toLowerCase()) {
+          modelFilter.toLowerCase().trim() == modelValue.toLowerCase().trim()) {
         return true;
       } else {
         return false;

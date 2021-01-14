@@ -73,6 +73,7 @@ class Carspage extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             if (!provider.isLoadingCarsPage) {
+              provider.filterCarModel = null;
               Navigator.pop(context);
             }
           },

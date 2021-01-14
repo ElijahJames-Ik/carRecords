@@ -1,6 +1,4 @@
 import 'package:carRecordApp/UI/user_details_page.dart';
-import 'package:carRecordApp/UI/view_single_car_details.dart';
-import 'package:carRecordApp/model/car_owners_data_model.dart';
 import 'package:carRecordApp/model/user_data_model.dart';
 import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:flutter/material.dart';

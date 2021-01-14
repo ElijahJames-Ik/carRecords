@@ -3,7 +3,6 @@ import 'package:carRecordApp/model/filter_data_car_model.dart';
 import 'package:carRecordApp/model/filter_data_user_model.dart';
 import 'package:carRecordApp/model/user_data_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AppProvider with ChangeNotifier {
   CarOwnerDataModel _ownerData;

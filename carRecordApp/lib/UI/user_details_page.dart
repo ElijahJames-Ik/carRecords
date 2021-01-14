@@ -1,6 +1,5 @@
 import 'package:carRecordApp/Templates/field_template.dart';
 import 'package:carRecordApp/Templates/string_content_template.dart';
-import 'package:carRecordApp/model/car_owners_data_model.dart';
 import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

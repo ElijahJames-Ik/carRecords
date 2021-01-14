@@ -6,6 +6,8 @@ import 'package:carRecordApp/model/car_owners_data_model.dart';
 import 'package:carRecordApp/model/filter_data_model.dart';
 import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,29 +20,44 @@ class OperationsOwnersPage {
   */
   static Future<PlatformFile> getCSVFile(
       GlobalKey<ScaffoldState> key, AppProvider provider) async {
-    return await FilePicker.platform
-        .pickFiles(
-            allowMultiple: false,
-            allowedExtensions: ['csv'],
-            type: FileType.custom)
-        .then((response) {
-      if (response != null) {
-        if (response.files.first.name == 'car_ownsers_data.csv') {
-          SharedOperations.saveFileLocation(response.files.first.path);
-          return response.files.first;
-        } else {
-          provider.isLoadingCarsPage = false;
-          SharedOperations.showMessage(
-              key, 'Invalid csv file, please open car_ownsers_data.csv');
+    return await Permission.storage.isPermanentlyDenied.then((status) async {
+      if (status) {
+        provider.isLoadingCarsPage = false;
+        SharedOperations.showMessage(key,
+            'You have permanently denied access for this application, goto to app settings to grant access');
+        return null;
+      } else {
+        return await FilePicker.platform
+            .pickFiles(
+                allowMultiple: false,
+                allowedExtensions: ['csv'],
+                type: FileType.custom)
+            .then((response) {
+          if (response != null) {
+            if (response.files.first.name == 'car_ownsers_data.csv') {
+              SharedOperations.saveFileLocation(response.files.first.path);
+              return response.files.first;
+            } else {
+              provider.isLoadingCarsPage = false;
+              SharedOperations.showMessage(
+                  key, 'Invalid csv file, please open car_ownsers_data.csv');
+              return null;
+            }
+          }
           return null;
-        }
-      }
-      return null;
-    }).catchError((onError) {
-      provider.isLoadingCarsPage = false;
-      SharedOperations.showMessage(key, 'Couldn\'t open file');
+        }).catchError((onError) {
+          var data = onError as PlatformException;
+          if (data.message == 'User did not allowed reading external storage') {
+            SharedOperations.showMessage(key,
+                'User did not allow reading external storage, check app settings');
+          } else {
+            SharedOperations.showMessage(key, 'Couldn\'t open file');
+          }
 
-      return null;
+          provider.isLoadingCarsPage = false;
+          return null;
+        });
+      }
     });
   }
 
@@ -55,6 +72,7 @@ class OperationsOwnersPage {
   */
   static void decodeCSVFile(PlatformFile file, AppProvider provider,
       GlobalKey<ScaffoldState> key) async {
+    provider.isLoadingCarsPage = true;
     final input = new File(file.path).openRead();
     List<CarOwnerDataModel> ownersList = new List<CarOwnerDataModel>();
     try {

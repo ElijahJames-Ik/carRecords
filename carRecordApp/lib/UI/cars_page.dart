@@ -27,6 +27,9 @@ class Carspage extends StatelessWidget {
   }
 
   Future<void> openAndLoadFile(AppProvider provider) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      provider.isLoadingCarsPage = true;
+    });
     SharedOperations.getFileLocation().then((response) {
       if (response != null && !isOpenPickedRequested) {
         File(response).exists().then((exists) {
@@ -90,6 +93,11 @@ class Carspage extends StatelessWidget {
                 color: Colors.white,
               ),
               onPressed: () {
+                if (provider.ownersDataList == null) {
+                  SharedOperations.showMessage(
+                      _scaffoldKey2, 'No data to filter');
+                  return;
+                }
                 Navigator.pushNamed(context, FilterPage.routeName)
                     .then((response) {
                   if (response != null) {

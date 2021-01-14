@@ -36,4 +36,22 @@ class SharedOperations {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('file_location');
   }
+
+/*
+* function checks if the gender selected in the filter is the same as the gender of
+* the carOwnerDataModel object being filtered.
+* @return this function returns true if they are the same else it returns false
+*/
+  static bool checkGender(String genderFilter, String genderValue) {
+    if (genderFilter == null || genderFilter.isEmpty || genderFilter == 'All') {
+      return true;
+    } else {
+      if (genderFilter != null &&
+          genderFilter.toLowerCase() == genderValue.toLowerCase()) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
 }

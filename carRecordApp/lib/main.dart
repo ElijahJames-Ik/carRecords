@@ -1,4 +1,5 @@
 import 'package:carRecordApp/UI/filter_page_owners.dart';
+import 'package:carRecordApp/UI/filter_page_users.dart';
 import 'package:carRecordApp/UI/landing_page.dart';
 import 'package:carRecordApp/UI/user_details_page.dart';
 import 'package:carRecordApp/UI/users_page.dart';
@@ -30,6 +31,7 @@ class OwnerApp extends StatelessWidget {
       title: 'Owners App',
       routes: {
         FilterPage.routeName: (ctx) => FilterPage(),
+        FilterPageUsers.routeName: (ctx) => FilterPageUsers(),
         Carspage.routeName: (ctx) => Carspage(),
         ViewCarOwnerDetails.routeName: (ctx) => ViewCarOwnerDetails(),
         ViewUserDetails.routeName: (ctx) => ViewUserDetails(),

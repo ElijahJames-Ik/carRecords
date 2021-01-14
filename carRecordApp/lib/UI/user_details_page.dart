@@ -119,9 +119,15 @@ class ViewUserDetails extends StatelessWidget {
                           return StringContent(
                               content: provider.userData.colorList[index]);
                         })
-                    : Text('No colors',
-                        style:
-                            TextStyle(color: Colors.cyan[600], fontSize: 20)),
+                    : Container(
+                        margin: EdgeInsets.only(
+                          left: dimension.width * 0.04,
+                          right: dimension.width * 0.04,
+                        ),
+                        child: Text('No colors',
+                            style: TextStyle(
+                                color: Colors.cyan[600], fontSize: 20)),
+                      ),
               ),
               Container(
                 margin: EdgeInsets.only(

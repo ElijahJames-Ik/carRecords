@@ -1,5 +1,8 @@
 import 'package:carRecordApp/Operations/operations_users_page.dart';
+import 'package:carRecordApp/Operations/shared_operations.dart';
 import 'package:carRecordApp/Templates/user_template.dart';
+import 'package:carRecordApp/UI/filter_page_users.dart';
+import 'package:carRecordApp/model/filter_data_user_model.dart';
 import 'package:carRecordApp/provider/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +20,7 @@ class UsersPage extends StatelessWidget {
         UserOperations.getUserDataFromAPI(_scaffoldKey).then((response) {
           if (response != null) {
             provider.userDataList = response;
+            provider.userDataListCopy = response;
             provider.isLoadingUserPage = false;
           } else {
             provider.isLoadingUserPage = false;
@@ -46,7 +50,26 @@ class UsersPage extends StatelessWidget {
           'Users',
           style: TextStyle(color: Colors.white),
         ),
-        actions: [],
+        actions: [
+          IconButton(
+              icon: Icon(Icons.filter_list_alt, color: Colors.white),
+              onPressed: () {
+                if (provider.userDataListCopy != null &&
+                    provider.userDataListCopy.length > 0) {
+                  Navigator.pushNamed(context, FilterPageUsers.routeName)
+                      .then((response) {
+                    if (response != null) {
+                      var filters = response as FilterModelUser;
+                      provider.userDataList = UserOperations.filterUsersList(
+                          provider.userDataListCopy, filters);
+                    }
+                  });
+                } else {
+                  SharedOperations.showMessage(
+                      _scaffoldKey, 'Can filter empty list');
+                }
+              })
+        ],
       ),
       body: Builder(
         builder: (context) => Container(

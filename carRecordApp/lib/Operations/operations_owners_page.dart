@@ -119,7 +119,7 @@ class OperationsOwnersPage {
       // print(element.carModel);
       if (checkCountries(filters.countries, element.country) &&
           checkColor(filters.colors, element.carColor) &&
-          checkGender(filters.gender, element.gender) &&
+          SharedOperations.checkGender(filters.gender, element.gender) &&
           checkDateFrom(filters.fromYear, element.carModelYear) &&
           checkDateTo(filters.toYear, element.carModelYear)) {
         return true;
@@ -127,6 +127,44 @@ class OperationsOwnersPage {
         return false;
       }
     }).toList();
+  }
+
+  /*
+  * function checks if the carOwnerDataModel object date is equal to or greated than the start
+  * date from the filterModel object.
+  * @return this function returns true if the condition is met else returns null
+  */
+  static bool checkDateFrom(String dateFilter, String dateValue) {
+    if (dateFilter == null || dateFilter.isEmpty) {
+      return true;
+    } else {
+      int fromDate = int.parse(dateFilter);
+      int date = int.parse(dateValue);
+      if (date >= fromDate) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  /*
+  * function checks if the carOwnerDataModel object date is less than or equal to the end
+  * date from the filterModel object.
+  * @return this function returns true if the condition is met else returns null
+  */
+  static bool checkDateTo(String dateFilter, String dateValue) {
+    if (dateFilter == null || dateFilter.isEmpty) {
+      return true;
+    } else {
+      int toDate = int.parse(dateFilter);
+      int date = int.parse(dateValue);
+      if (date <= toDate) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   /*
@@ -180,62 +218,6 @@ class OperationsOwnersPage {
                   .toList()
                   .length >
               0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-/*
-* function checks if the gender selected in the filter is the same as the gender of
-* the carOwnerDataModel object being filtered.
-* @return this function returns true if they are the same else it returns false
-*/
-  static bool checkGender(String genderFilter, String genderValue) {
-    if (genderFilter == null || genderFilter.isEmpty || genderFilter == 'All') {
-      return true;
-    } else {
-      if (genderFilter != null &&
-          genderFilter.toLowerCase() == genderValue.toLowerCase()) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  /*
-  * function checks if the carOwnerDataModel object date is equal to or greated than the start
-  * date from the filterModel object.
-  * @return this function returns true if the condition is met else returns null
-  */
-  static bool checkDateFrom(String dateFilter, String dateValue) {
-    if (dateFilter == null || dateFilter.isEmpty) {
-      return true;
-    } else {
-      int fromDate = int.parse(dateFilter);
-      int date = int.parse(dateValue);
-      if (date >= fromDate) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  /*
-  * function checks if the carOwnerDataModel object date is less than or equal to the end
-  * date from the filterModel object.
-  * @return this function returns true if the condition is met else returns null
-  */
-  static bool checkDateTo(String dateFilter, String dateValue) {
-    if (dateFilter == null || dateFilter.isEmpty) {
-      return true;
-    } else {
-      int toDate = int.parse(dateFilter);
-      int date = int.parse(dateValue);
-      if (date <= toDate) {
         return true;
       } else {
         return false;

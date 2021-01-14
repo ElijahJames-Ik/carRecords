@@ -8,6 +8,7 @@ class AppProvider with ChangeNotifier {
   List<CarOwnerDataModel> _ownersDataList;
   List<CarOwnerDataModel> _ownersDataListCopy;
   List<UserDataModel> _userDataList;
+  List<UserDataModel> _userDataListCopy;
 
   UserDataModel _userData;
   bool _isLoadingCarsPage = true;
@@ -17,6 +18,7 @@ class AppProvider with ChangeNotifier {
   List<CarOwnerDataModel> get ownersDataList => _ownersDataList;
   List<CarOwnerDataModel> get ownersDataListCopy => _ownersDataListCopy;
   List<UserDataModel> get userDataList => _userDataList;
+  List<UserDataModel> get userDataListCopy => _userDataListCopy;
   bool get isLoadingCarsPage => _isLoadingCarsPage;
   bool get isLoadingUserPage => _isLoadingUserPage;
   UserDataModel get userData => _userData;
@@ -28,6 +30,11 @@ class AppProvider with ChangeNotifier {
 
   set userDataList(List<UserDataModel> data) {
     _userDataList = data;
+    notifyListeners();
+  }
+
+  set userDataListCopy(List<UserDataModel> data) {
+    _userDataListCopy = data;
     notifyListeners();
   }
 

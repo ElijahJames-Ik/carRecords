@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:carRecordApp/Operations/shared_operations.dart';
+import 'package:collection/collection.dart';
+import 'package:carRecordApp/model/filter_data_user_model.dart';
 import 'package:carRecordApp/model/user_data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,5 +57,56 @@ class UserOperations {
         return null;
       }
     });
+  }
+
+  static List<UserDataModel> filterUsersList(
+      List<UserDataModel> list, FilterModelUser filters) {
+    return list.where((element) {
+      // print(element.carModelYear);
+      // print(element.carModel);
+      if (checkCountries(filters.countries, element.countryList) &&
+          checkColor(filters.colors, element.colorList) &&
+          SharedOperations.checkGender(filters.gender, element.gender)) {
+        return true;
+      } else {
+        return false;
+      }
+    }).toList();
+  }
+
+  static bool checkCountries(List<String> countries, List<String> countryList) {
+    if (countries == null || countries.length == 0) {
+      return true;
+    } else {
+      if (countries.length > 0) {
+        countryList = countryList.map((e) => e.toLowerCase()).toList();
+        for (String country in countries) {
+          if (!countryList.contains(country.toLowerCase())) {
+            return false;
+          }
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  static bool checkColor(List<String> colors, List<String> colorList) {
+    if (colors == null || colors.length == 0) {
+      return true;
+    } else {
+      colorList = colorList.map((e) => e.toLowerCase()).toList();
+      if (colors.length > 0) {
+        for (String color in colors) {
+          if (!colors.contains(color.toLowerCase())) {
+            return false;
+          }
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 }

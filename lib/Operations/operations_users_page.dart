@@ -5,7 +5,6 @@ import 'package:carRecordApp/model/filter_data_user_model.dart';
 import 'package:carRecordApp/model/user_data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class UserOperations {
@@ -15,52 +14,44 @@ class UserOperations {
   * @return this function returns List of UserDataModel if the
   * operation is successful else it returns null
   */
-  static Future<List<UserDataModel>> getUserDataFromAPI(
-      GlobalKey<ScaffoldState> key) {
-    return SharedOperations.checkConnectivity().then((result) {
-      if (result) {
-        String apiUrl = 'https://android-json-test-api.herokuapp.com/accounts';
-        final headers = {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        };
 
-        return http
-            .get(Uri.encodeFull(apiUrl), headers: headers)
-            .timeout(Duration(seconds: 15), onTimeout: () {
-          SharedOperations.showMessage(key, 'Connection timed out');
-          return null;
-        }).then((response) {
-          if (response != null) {
-            int statusCode = response.statusCode;
-            if (statusCode == 200) {
-              try {
-                var body = json.decode(response.body) as List;
+  static Future<List<UserDataModel>> getUserDataFromAPI() {
+    String apiUrl = 'https://android-json-test-api.herokuapp.com/accounts';
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    };
+    return http
+        .get(Uri.encodeFull(apiUrl), headers: headers)
+        .timeout(Duration(seconds: 15), onTimeout: () {
+      return null;
+    }).then((response) {
+      if (response != null) {
+        int statusCode = response.statusCode;
+        if (statusCode == 200) {
+          try {
+            var body = json.decode(response.body) as List;
 
-                return body
-                    .map((json) =>
-                        UserDataModel.fromJson(json as Map<String, dynamic>))
-                    .toList();
-              } catch (error) {
-                print(error.toString());
-                SharedOperations.showMessage(
-                    key, 'An error occured parse json resource');
-                return null;
-              }
-            } else {
-              return null;
-            }
-          } else {
+            return body
+                .map((json) =>
+                    UserDataModel.fromJson(json as Map<String, dynamic>))
+                .toList();
+          } catch (error) {
             return null;
           }
-        });
+        } else {
+          return null;
+        }
       } else {
-        SharedOperations.showMessage(key, 'You are offline');
         return null;
       }
     });
   }
 
+  /*
+  * Filters list of users based on the supplied filters
+  * @return this returns a filtered list of user items
+  */
   static List<UserDataModel> filterUsersList(
       List<UserDataModel> list, FilterUserModel filters) {
     return list.where((element) {

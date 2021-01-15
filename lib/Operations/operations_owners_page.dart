@@ -70,37 +70,22 @@ class OperationsOwnersPage {
   * this allows for the data to be displayed in the cars page since ownersDataList
   * is used as the data list for displayed the parsed data from the csv file.
   */
-  static void decodeCSVFile(PlatformFile file, AppProvider provider,
-      GlobalKey<ScaffoldState> key) async {
-    provider.isLoadingCarsPage = true;
+  static Future<List<CarOwnerDataModel>> decodeCSV(File file) {
     final input = new File(file.path).openRead();
     List<CarOwnerDataModel> ownersList = new List<CarOwnerDataModel>();
     try {
-      input.transform(utf8.decoder).transform(new LineSplitter()).listen(
-          (String line) {
+      return input
+          .transform(utf8.decoder)
+          .transform(new LineSplitter())
+          .listen((String line) {
         List row = line.split(new RegExp(',(?=(?:[^\"]*\"[^\"]*\")*[^\"]*\$)'));
         var data = CarOwnerDataModel.fromList(row);
         if (row[0] != 'id') {
           ownersList.add(data);
-        } else {
-          // if (row == null || row.length < 10 || row.length > 10) {
-          //   SharedOperations.showMessage(key, 'Couldn\'t parse csv file');
-          //   provider.isLoadingCarsPage = false;
-          // }
         }
-      }, onDone: () {
-        provider.ownersDataList = ownersList;
-        provider.ownersDataListCopy = ownersList;
-        provider.isLoadingCarsPage = false;
-      }, onError: (error) {
-        SharedOperations.showMessage(key, 'Couldn\'t parse csv file');
-        provider.ownersDataList = null;
-        provider.ownersDataListCopy = null;
-        provider.isLoadingCarsPage = false;
-      });
-    } catch (ex) {
-      SharedOperations.showMessage(key, 'Couldn\'t parse csv file');
-      provider.isLoadingCarsPage = false;
+      }).asFuture(ownersList);
+    } catch (error) {
+      return null;
     }
   }
 

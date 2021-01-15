@@ -46,6 +46,9 @@ class SharedOperations {
     if (genderFilter == null || genderFilter.isEmpty || genderFilter == 'All') {
       return true;
     } else {
+      if (genderValue == null) {
+        return false;
+      }
       if (genderFilter != null &&
           genderFilter.toLowerCase() == genderValue.toLowerCase()) {
         return true;

@@ -17,13 +17,15 @@ class UsersPage extends StatelessWidget {
     AppProvider provider = Provider.of<AppProvider>(context);
     if (isStarting) {
       if (provider.userDataList == null) {
-        UserOperations.getUserDataFromAPI(_scaffoldKey).then((response) {
+        UserOperations.getUserDataFromAPI().then((response) {
           if (response != null) {
             provider.userDataList = response;
             provider.userDataListCopy = response;
             provider.isLoadingUserPage = false;
           } else {
             provider.isLoadingUserPage = false;
+            SharedOperations.showMessage(
+                key, 'An error occured please try again later');
           }
         });
       } else {

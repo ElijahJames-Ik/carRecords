@@ -17,9 +17,25 @@ class Carspage extends StatelessWidget {
   bool isOpenPickedRequested = false;
 
   void defaultOpen(AppProvider provider) {
+    provider.isLoadingCarsPage = true;
     OperationsOwnersPage.getCSVFile(_scaffoldKey2, provider).then((file) {
       if (file != null) {
-        OperationsOwnersPage.decodeCSVFile(file, provider, _scaffoldKey2);
+        provider.isLoadingCarsPage = true;
+        provider.ownersDataList = null;
+        provider.ownersDataListCopy = null;
+        provider.filterCarModel = null;
+        OperationsOwnersPage.decodeCSV(new File(file.path)).then((response) {
+          if (response != null) {
+            provider.ownersDataList = response;
+            provider.ownersDataListCopy = response;
+            provider.isLoadingCarsPage = false;
+          } else {
+            SharedOperations.showMessage(key, 'Couldn\'t parse csv file');
+            provider.ownersDataList = null;
+            provider.ownersDataListCopy = null;
+            provider.isLoadingCarsPage = false;
+          }
+        });
       } else {
         provider.isLoadingCarsPage = false;
       }
@@ -35,7 +51,19 @@ class Carspage extends StatelessWidget {
         File(response).exists().then((exists) {
           if (exists) {
             PlatformFile file = new PlatformFile(path: response);
-            OperationsOwnersPage.decodeCSVFile(file, provider, _scaffoldKey2);
+            OperationsOwnersPage.decodeCSV(new File(file.path))
+                .then((response) {
+              if (response != null) {
+                provider.ownersDataList = response;
+                provider.ownersDataListCopy = response;
+                provider.isLoadingCarsPage = false;
+              } else {
+                SharedOperations.showMessage(key, 'Couldn\'t parse csv file');
+                provider.ownersDataList = null;
+                provider.ownersDataListCopy = null;
+                provider.isLoadingCarsPage = false;
+              }
+            });
           } else {
             SharedOperations.showMessage(
                 key, 'File doesn\'t exist, please select a new file');

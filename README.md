@@ -24,3 +24,8 @@ contains a filter button on the app bar which navigates the user to a page where
 generate a new list based on the selected options. To view full details for a user, you can click on a tile to navigate to the user 
 details page to view all details about the user.
 
+Note
+-----
+in the filter pages for both cars and users page, the color and country textFields are used to add one item to a list. so for example to 
+enter japan, nigeria as filter requirements. you must enter them one by one in the country textfield followed by the enter key to add
+them to the list of countries to be used in filtering the data. this process apply for colors also.

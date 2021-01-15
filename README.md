@@ -1,6 +1,6 @@
 # carRecords
 --------------
-[![CircleCI](https://circleci.com/gh/circleci/circleci-docs/tree/teesloane-patch-5.svg?style=svg)](https://circleci.com/gh/circleci/circleci-docs/tree/teesloane-patch-5)
+[![CircleCI](https://app.circleci.com/pipelines/github/Dragonlord47/carRecords?branch=circleci-project-setup.svg?style=svg)](https://circleci.com/gh/circleci/circleci-docs/Dragonlord47/carRecords?branch=circleci-project-setup)
 reads car records from csv file
 This application was built using the flutter framework. Dart was used to create the user interface and the application logic.
 Flutter framework allows the developer to build android and ios using the one code base, making development of ios and android

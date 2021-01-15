@@ -1,4 +1,4 @@
-# carRecords [![CircleCI](https://circleci.com/gh/Dragonlord47/carRecords.svg?style=svg)](https://circleci.com/gh/Dragonlord47/carRecords/master)
+# carRecords [![CircleCI](https://circleci.com/gh/Dragonlord47/carRecords.svg?style=svg)](https://app.circleci.com/pipelines/github/Dragonlord47)
 --------------
 
 reads car records from csv file and displays list of users gotten from a users API

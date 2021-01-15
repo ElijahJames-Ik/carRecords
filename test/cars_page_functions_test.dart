@@ -6,7 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('test cars page function', () async {
-    File file = File('./test_resources/car_ownsers_data.csv');
+    //if running test in not in circle ci change path to /test_resources/car_ownsers_data.csv
+    File file = File('/root/project/test_resources/car_ownsers_data.csv');
     var list = await OperationsOwnersPage.decodeCSV(file);
     print(list.length);
     expect(list.length, 65499);

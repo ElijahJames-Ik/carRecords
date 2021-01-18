@@ -30,6 +30,6 @@ in the filter pages for both cars and users page, the color and country textFiel
 enter japan, nigeria as filter requirements. you must enter them one by one in the country textfield followed by the enter key to add
 them to the list of countries to be used in filtering the data. this process apply for colors also.
 
-App Demo Video
+App demo video
 --------------
 https://drive.google.com/file/d/16GImYwl_BD798NQbit3SvE5KAbpzBZCg/view?usp=sharing

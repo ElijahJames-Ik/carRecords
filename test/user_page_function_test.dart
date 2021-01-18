@@ -6,7 +6,7 @@ void main() {
   test('test users page functions', () async {
     var list = await UserOperations.getUserDataFromAPI();
 
-    expect(list.length, 86);
+    expect(list.length, 79);
 
     var filters = FilterUserModel(
         colors: ['Red', 'Orange', 'Blue'],
